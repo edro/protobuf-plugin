@@ -21,8 +21,8 @@
         "protobuf-php/google-protobuf-proto" : "~0.1@dev",
         "zendframework/zend-code"            : "^2.6-dev",
         "psr/log"                            : "^1.0",
-        "symfony/console"                    : "^2.5",
-        "symfony/process"                    : "^2.5",
+        "symfony/console"                    : ">=2.5",
+        "symfony/process"                    : "=>2.5",
         "doctrine/inflector"                 : "^1.0"
     },
     "require-dev": {
