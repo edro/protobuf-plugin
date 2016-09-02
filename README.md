@@ -8,7 +8,6 @@ Protobuf for PHP is an implementation of Google's Protocol Buffers for the PHP
 language, supporting its binary data serialization and including a `protoc`
 plugin to generate PHP classes from ```.proto``` files.
 
-**NOTICE: THIS CLIENT IS UNDER ACTIVE DEVELOPMENT, USE AT YOUR OWN RISK**
 
 ## Installation
 
@@ -54,7 +53,7 @@ $ composer require "protobuf-php/protobuf-plugin"
 
 To create your address book application, you'll need to start with a ```.proto``` file. The definitions in a ```.proto``` file are simple: you add a message for each data structure you want to serialize, then specify a name and a type for each field in the message. Here is the ```.proto``` file that defines your messages, ```addressbook.proto```.
 
-```
+```proto
 package tutorial;
 import "php.proto";
 option (php.package) = "Tutorial.AddressBookProtos";
