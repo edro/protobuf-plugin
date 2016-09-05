@@ -2,15 +2,12 @@
 
 namespace Protobuf\Compiler\Generator\Message;
 
-use google\protobuf\DescriptorProto;
-use google\protobuf\FieldDescriptorProto;
-
-use Zend\Code\Generator\MethodGenerator;
-use Zend\Code\Generator\GeneratorInterface;
-
 use Protobuf\Compiler\Entity;
 use Protobuf\Compiler\Generator\BaseGenerator;
 use Protobuf\Compiler\Generator\GeneratorVisitor;
+use Zend\Code\Generator\ClassGenerator;
+use Zend\Code\Generator\GeneratorInterface;
+use Zend\Code\Generator\MethodGenerator;
 
 /**
  * Message fromStream generator
@@ -24,7 +21,19 @@ class FromStreamGenerator extends BaseGenerator implements GeneratorVisitor
      */
     public function visit(Entity $entity, GeneratorInterface $class)
     {
-        $class->addMethodFromGenerator($this->generateMethod($entity));
+        if ($class instanceof ClassGenerator) {
+            $class->addMethodFromGenerator($this->generateMethod($entity));
+        }
+    }
+
+    /**
+     * @return string[]
+     */
+    public function generateBody()
+    {
+        return [
+            'return new self($stream, $configuration);',
+        ];
     }
 
     /**
@@ -34,38 +43,29 @@ class FromStreamGenerator extends BaseGenerator implements GeneratorVisitor
      */
     protected function generateMethod(Entity $entity)
     {
-        $lines   = $this->generateBody($entity);
-        $body    = implode(PHP_EOL, $lines);
-        $method  = MethodGenerator::fromArray([
-            'name'       => 'fromStream',
-            'body'       => $body,
-            'static'     => true,
-            'parameters' => [
-                [
-                    'name'          => 'stream',
-                    'type'          => 'mixed',
+        $lines = $this->generateBody();//$entity);
+        $body = implode(PHP_EOL, $lines);
+        $method = MethodGenerator::fromArray(
+            [
+                'name'       => 'fromStream',
+                'body'       => $body,
+                'static'     => true,
+                'parameters' => [
+                    [
+                        'name' => 'stream',
+                        //'type'          => 'mixed',
+                    ],
+                    [
+                        'name'         => 'configuration',
+                        'type'         => '\Protobuf\Configuration',
+                        'defaultValue' => null,
+                    ],
                 ],
-                [
-                    'name'          => 'configuration',
-                    'type'          => '\Protobuf\Configuration',
-                    'defaultValue'  => null
-                ]
-            ],
-            'docblock'   => [
-                'shortDescription' => "{@inheritdoc}"
-            ]
-        ]);
+                'docblock'   => [
+                    'shortDescription' => "{@inheritdoc}",
+                ],
+            ]);
 
         return $method;
-    }
-
-    /**
-     * @return string[]
-     */
-    public function generateBody()
-    {
-        return [
-            'return new self($stream, $configuration);'
-        ];
     }
 }

@@ -77,7 +77,7 @@ class Person extends \Protobuf\AbstractMessage
      *
      * @param string $value
      */
-    public function setName($value)
+    public function setName(string $value)
     {
         $this->name = $value;
     }
@@ -107,7 +107,7 @@ class Person extends \Protobuf\AbstractMessage
      *
      * @param int $value
      */
-    public function setId($value)
+    public function setId(int $value)
     {
         $this->id = $value;
     }
@@ -137,7 +137,7 @@ class Person extends \Protobuf\AbstractMessage
      *
      * @param string $value
      */
-    public function setEmail($value = null)
+    public function setEmail(string $value = null)
     {
         $this->email = $value;
     }

@@ -5,9 +5,9 @@ namespace Protobuf\Compiler\Generator\Message;
 use Protobuf\Compiler\Entity;
 use Protobuf\Compiler\Generator\BaseGenerator;
 use Protobuf\Compiler\Generator\GeneratorVisitor;
-
-use Zend\Code\Generator\MethodGenerator;
+use Zend\Code\Generator\ClassGenerator;
 use Zend\Code\Generator\GeneratorInterface;
+use Zend\Code\Generator\MethodGenerator;
 
 /**
  * Message __construct Generator
@@ -21,43 +21,12 @@ class ConstructGenerator extends BaseGenerator implements GeneratorVisitor
      */
     public function visit(Entity $entity, GeneratorInterface $class)
     {
-        if ( ! $this->hasDefaultValue($entity)) {
+        if (!$this->hasDefaultValue($entity)) {
             return;
         }
-
-        $class->addMethodFromGenerator($this->generateConstructorMethod($entity));
-    }
-
-    /**
-     * @param \Protobuf\Compiler\Entity $entity
-     *
-     * @return \Zend\Code\Generator\GeneratorInterface
-     */
-    protected function generateConstructorMethod(Entity $entity)
-    {
-        $lines   = $this->generateBody($entity);
-        $body    = implode(PHP_EOL, $lines);
-        $method  = MethodGenerator::fromArray([
-            'name'       => '__construct',
-            'body'       => $body,
-            'parameters' => [
-                [
-                    'name'          => 'stream',
-                    'type'          => 'mixed',
-                    'defaultValue'  => null
-                ],
-                [
-                    'name'          => 'configuration',
-                    'type'          => '\Protobuf\Configuration',
-                    'defaultValue'  => null
-                ]
-            ],
-            'docblock'   => [
-                'shortDescription' => '{@inheritdoc}'
-            ]
-        ]);
-
-        return $method;
+        if ($class instanceof ClassGenerator) {
+            $class->addMethodFromGenerator($this->generateConstructorMethod($entity));
+        }
     }
 
     /**
@@ -67,16 +36,16 @@ class ConstructGenerator extends BaseGenerator implements GeneratorVisitor
      */
     public function generateBody(Entity $entity)
     {
-        $body       = [];
+        $body = [];
         $descriptor = $entity->getDescriptor();
-        $fields     = $descriptor->getFieldList() ?: [];
+        $fields = $descriptor->getFieldList() ? : [];
 
         foreach ($fields as $field) {
-            if ( ! $field->hasDefaultValue()) {
+            if (!$field->hasDefaultValue()) {
                 continue;
             }
 
-            $name  = $field->getName();
+            $name = $field->getName();
             $value = $this->getDefaultFieldValue($field);
 
             $body[] = sprintf('$this->%s = %s;', $name, $value);
@@ -96,10 +65,10 @@ class ConstructGenerator extends BaseGenerator implements GeneratorVisitor
     public function hasDefaultValue(Entity $entity)
     {
         $descriptor = $entity->getDescriptor();
-        $fields     = $descriptor->getFieldList() ?: [];
+        $fields = $descriptor->getFieldList() ? : [];
 
         foreach ($fields as $field) {
-            if ( ! $field->hasDefaultValue()) {
+            if (!$field->hasDefaultValue()) {
                 continue;
             }
 
@@ -107,5 +76,38 @@ class ConstructGenerator extends BaseGenerator implements GeneratorVisitor
         }
 
         return false;
+    }
+
+    /**
+     * @param \Protobuf\Compiler\Entity $entity
+     *
+     * @return \Zend\Code\Generator\GeneratorInterface
+     */
+    protected function generateConstructorMethod(Entity $entity)
+    {
+        $lines = $this->generateBody($entity);
+        $body = implode(PHP_EOL, $lines);
+        $method = MethodGenerator::fromArray(
+            [
+                'name'       => '__construct',
+                'body'       => $body,
+                'parameters' => [
+                    [
+                        'name'         => 'stream',
+                        //'type'          => 'mixed',
+                        'defaultValue' => null,
+                    ],
+                    [
+                        'name'         => 'configuration',
+                        'type'         => '\Protobuf\Configuration',
+                        'defaultValue' => null,
+                    ],
+                ],
+                'docblock'   => [
+                    'shortDescription' => '{@inheritdoc}',
+                ],
+            ]);
+
+        return $method;
     }
 }

@@ -67,7 +67,7 @@ class CompilerTest extends TestCase
         $unique   = uniqid();
         $compiler = new Compiler($this->logger);
         $entity   = $this->getMock(Entity::CLASS, [], [], '', false);
-        $class    = "ProtobufCompilerTest\CompilerTest$unique\Extension";
+        $class    = "ProtobufCompilerTest\\CompilerTest$unique\\Extension";
         $code     = <<<CODE
 <?php
 namespace ProtobufCompilerTest\CompilerTest$unique;

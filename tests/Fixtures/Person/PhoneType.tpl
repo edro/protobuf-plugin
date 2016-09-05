@@ -84,7 +84,7 @@ class PhoneType extends \Protobuf\Enum
      * @param int $value
      * @return \ProtobufCompilerTest\Protos\Person\PhoneType
      */
-    public static function valueOf($value)
+    public static function valueOf(int $value)
     {
         switch ($value) {
             case 0: return self::MOBILE();

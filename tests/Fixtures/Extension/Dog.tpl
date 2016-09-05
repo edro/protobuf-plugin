@@ -63,7 +63,7 @@ class Dog extends \Protobuf\AbstractMessage implements \Protobuf\Extension
      *
      * @param int $value
      */
-    public function setBonesBuried($value = null)
+    public function setBonesBuried(int $value = null)
     {
         $this->bones_buried = $value;
     }

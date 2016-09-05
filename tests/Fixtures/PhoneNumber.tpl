@@ -73,7 +73,7 @@ class PhoneNumber extends \Protobuf\AbstractMessage
      *
      * @param string $value
      */
-    public function setNumber($value)
+    public function setNumber(string $value)
     {
         $this->number = $value;
     }
